@@ -11,7 +11,7 @@ var router = express.Router();
  * @returns {object} A string message.
  */
 router.get('/', function (req, res) {
-    res.json({ message: 'hooray! welcome to APP Gritalo CMU!' });
+    res.json({ message: 'hooray! welcome to BlueSky API!' });
 });
 
 module.exports = router;
