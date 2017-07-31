@@ -3,13 +3,13 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
 
-var UserHuntLocationsSchema   = new Schema({
-    user_id: Schema.Types.ObjectId,
-    hunt_id: Schema.Types.ObjectId,
-    start_time:  { type: Date, default: Date.now },
-    end_time: { type: Date, default: Date.now },
+var UserHuntSchema   = new Schema({
+    userId: Schema.Types.ObjectId,
+    huntId: Schema.Types.ObjectId,
+    startTime:  { type: Date, default: Date.now },
+    endTime: { type: Date, default: Date.now },
     status: String
 
 });
 
-module.exports = mongoose.model('UserHuntLocations', UserHuntLocationsSchema);
+module.exports = mongoose.model('UserHunt', UserHuntSchema);
