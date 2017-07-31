@@ -27,6 +27,7 @@ if(environment != 'development'){
 /** BEGIN: Express Routes Definition */
 var router = require('./routes/router');
 var users = require('./routes/user');
+var locations = require('./routes/location');
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -36,6 +37,7 @@ app.use(function(req, res, next) {
 
 app.use('/api', router);
 app.use('/api', users);
+app.use('/api', locations)
 /** END: Express Routes Definition */
 
 /** BEGIN: Express Server Start */
