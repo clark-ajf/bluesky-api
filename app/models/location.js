@@ -6,6 +6,7 @@ var Schema       = mongoose.Schema;
 var LocationSchema   = new Schema({
     location_name: {type: String, required: true},
     location_description: {type: String, required: true},
+    hunt_id: {type: Schema.Types.ObjectId},
     is_accessible: {type: Boolean},
     is_qr_enabled: {type: Boolean, required: true},
     is_trivia_enabled: {type: Boolean, required: true},
