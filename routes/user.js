@@ -1,4 +1,4 @@
-/** 
+/**
  * Express Route: /users
  * @author Clark Jeria
  * @version 0.0.1
@@ -36,7 +36,7 @@ router.route('/users')
      */
     .post(function (req, res) {
         var user = new User();
-	
+
         user.userName = req.body.userName;
         user.emailAddress = req.body.emailAddress;
         user.password = req.body.password;
@@ -55,7 +55,7 @@ router.route('/users')
         });
     });
 
-/** 
+/**
  * Express Route: /users/:user_id
  * @param {string} user_id - Id Hash of driver Object
  */
@@ -131,7 +131,7 @@ router.route('/users/:user_id')
         });
     });
 
-/** 
+/**
  * Express Route: /users/login
  * @param {string} user_id - Id Hash of driver Object
  */
@@ -146,7 +146,7 @@ router.route('/users/login')
     .post(function (req, res) {
         var userBody = new User();
         userBody.userName = req.body.userName;
-        userBody.password = req.body.password; 
+        userBody.password = req.body.password;
         User.findOne({ userName: req.body.userName, password: req.body.password }, function (err, user) {
             if (err) {
                 res.status(500).json({ "status code": 500, "error code": "1002", "error message": "Internal server error" });
@@ -176,7 +176,7 @@ router.route('/users/passwordrecovery')
                 res.status(500).json({ "status code": 500, "error code": "1002", "error message": "Internal server error" });
             } else {
                if (user) {
-                    
+
                     res.mailer.send('email', {
                     to: user.emailAddress,
                     subject: 'Password Recovery', // REQUIRED.
