@@ -1,4 +1,4 @@
-/** 
+/**
  * Express Route: /hunts
  * @author Ananth Bommireddipalli
  * @version 0.0.1
@@ -39,7 +39,7 @@ router.route('/hunts')
             if (err) {
                 res.status(400).json(err);
             } else {
-                res.status(201).json(user);
+                res.status(201).json(hunt);
             }
         });
     });
