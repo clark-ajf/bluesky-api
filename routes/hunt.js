@@ -5,7 +5,7 @@
  */
 var express = require('express');
 var router = express.Router();
-var User = require('../app/models/hunt');
+var Hunt = require('../app/models/hunt');
 
 router.route('/hunts')
     /**

@@ -13,8 +13,7 @@ var HuntSchema   = new Schema({
     locations: [{ type: Schema.Types.ObjectId, ref: 'Location' }],
     isDeleted: {type: Boolean, default: false},
     isActive: {type: Boolean, default: true},
-    owner: { type: Schema.Types.ObjectId, ref: 'User' }
-
+    owner: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
 module.exports = mongoose.model('Hunt', HuntSchema);

@@ -8,8 +8,7 @@ var UserHuntSchema   = new Schema({
     huntId: Schema.Types.ObjectId,
     startTime:  { type: Date, default: Date.now },
     endTime: { type: Date, default: Date.now },
-    status: String
-
+    status: String,
 });
 
 module.exports = mongoose.model('UserHunt', UserHuntSchema);
