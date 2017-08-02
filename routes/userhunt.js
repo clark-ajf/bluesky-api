@@ -21,11 +21,11 @@ router.route('/userhunts')
         userhunt.userId = req.body.userId;
         userhunt.huntId = req.body.huntId;
         userhunt.status = req.body.status;
-        hunt.save(function (err) {
+        userhunt.save(function (err) {
             if (err) {
                 res.status(400).json(err);
             } else {
-                res.status(201).json(user);
+                res.status(201).json(userhunt);
             }
         });
     });
@@ -46,7 +46,7 @@ router.route('/hunts/:user_id/:hunt_id')
                 res.status(404).json({ "status code": 404, "error code": "1004", "error message": "Given user hunt does not exist" });
             } else {
                 if (userhunt) {
-                    res.status(200).json(user)
+                    res.status(200).json(userhunt)
                 }
                 else {
                     res.status(404).send(err);
