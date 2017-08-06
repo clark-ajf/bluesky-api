@@ -73,12 +73,110 @@ router.route('/hunts/:user_id')
                     from: 'userhunts',
                     localField: 'owner',
                     foreignField: 'userId',
-                    as: 'activeHunts'
+                    as: 'activeCompletedHunts'
                 }
+            },
+            {
+                $project: {
+                    _id : 1,
+                    owner : 1,
+                    imageUrl : 1,
+                    longDescription : 1,
+                    shortDescription : 1,
+                    name : 1,
+                    isDeleted: 1,
+                    locations: 1,
+                    activeCompletedHunts : { 
+                        $filter: {
+                            input: "$activeCompletedHunts",
+                            as: "activeCompletedHunt",
+                            cond: { $ne: [ "$$activeCompletedHunt.huntId", "$_id" ] }
+                        }
+                    }
+                }
+            },
+            {
+                $unwind: {
+                    path: '$activeCompletedHunts',
+                    preserveNullAndEmptyArrays : true
+                }
+            },
+            {
+                $project: {
+                    _id : 1,
+                    owner : 1,
+                    imageUrl : 1,
+                    longDescription : 1,
+                    shortDescription : 1,
+                    name : 1,
+                    isDeleted: 1,
+                    locations: 1,
+                    activeCompletedHunts : 1
+                }
+            },
+            {
+                $lookup: {
+                    from: 'hunts',
+                    localField: 'activeCompletedHunts.huntId',
+                    foreignField: '_id',
+                    as: 'activeCompletedHuntsDetails'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$activeCompletedHuntsDetails',
+                    preserveNullAndEmptyArrays : true
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    "ownedHunts._id": "$_id",
+                    "ownedHunts.owner": "$owner",
+                    "ownedHunts.imageUrl": "$imageUrl",
+                    "ownedHunts.longDescription": "$longDescription",
+                    "ownedHunts.shortDescription": "$shortDescription",
+                    "ownedHunts.name": "$name",
+                    "ownedHunts.isDeleted": "$isDeleted",
+                    "ownedHunts.locations": "$locations",
+                    "activeCompletedHuntsObj._id": "$activeCompletedHuntsDetails._id",
+                    "activeCompletedHuntsObj.owner": "$activeCompletedHuntsDetails.owner",
+                    "activeCompletedHuntsObj.imageUrl": "$activeCompletedHuntsDetails.imageUrl",
+                    "activeCompletedHuntsObj.longDescription": "$activeCompletedHuntsDetails.longDescription",
+                    "activeCompletedHuntsObj.shortDescription": "$activeCompletedHuntsDetails.shortDescription",
+                    "activeCompletedHuntsObj.name": "$activeCompletedHuntsDetails.name",
+                    "activeCompletedHuntsObj.isDeleted": "$activeCompletedHuntsDetails.isDeleted",
+                    "activeCompletedHuntsObj.locations": "$activeCompletedHuntsDetails.locations",
+                    "activeCompletedHuntsObj.status": "$activeCompletedHunts.status"
+                }
+            },
+            { 
+                $group: {
+                "_id":0,"list1":{$addToSet:"$ownedHunts"},"list2":{$addToSet:"$activeCompletedHuntsObj"}
+                }
+            },
+            { $project: {array:{$setUnion:["$list1","$list2"]}}},
+            { $unwind: {
+                    path: '$array',
+                    preserveNullAndEmptyArrays : true
+                }
+            },
+                { $project: {
+                    _id: "$array._id", 
+                    name: "$array.name",
+                    owner : "$array.owner",
+                    imageUrl : "$array.imageUrl",
+                    longDescription : "$array.longDescription",
+                    shortDescription : "$array.shortDescription",
+                    isDeleted: "$array.isDeleted",
+                    locations: "$array.locations",
+                    status: { $ifNull: [ '$array.status', "owned" ] }
+                }
+            
             }
         ], function(err, results){
             if (err) {
-                res.status(404).json({ "status code": 404, "error code": "1004", "error message": "Given user hunt does not exist" });
+                res.status(404).json(err);
             } else {
                 if (results) {
                     res.status(200).json(results)
