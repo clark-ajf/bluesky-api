@@ -24,20 +24,18 @@ router.route('/users')
     })
     /**
      * POST call for the user entity.
-     * @param {String} userName - The userName of the new user
-     * @param {String} emailAddress - The emailAddress of the new user
-     * @param {string} firstName - The first name of the new user
-     * @param {string} lastName - The last name of the new user
+     * @param {Number} userId - The user id of the new user
+     * @param {String} email - The email of the new user
+     * @param {Boolean} organizer - Organize capabilties
      * @returns {object} A message and the user created. (201 Status Code)
      * @throws Bad Request (400 Status Code)
      */
     .post(function (req, res) {
         var user = new User();
 
-        user.userName = req.body.userName;
-        user.emailAddress = req.body.emailAddress;
-        user.firstName = req.body.firstName;
-        user.lastName = req.body.lastName;
+        user.userId = req.body.userId;
+        user.email = req.body.email;
+        user.organizer = req.body.organizer;
         user.save(function (err) {
             if (err) {
                 res.status(400).json(err);
@@ -58,7 +56,7 @@ router.route('/users/:user_id')
      * @throws Not Found (404 Status Code)
      */
     .get(function (req, res) {
-        User.findById(req.params.user_id, function (err, user) {
+        User.findOne({ userId: req.params.user_id}, function (err, user) {
             if (err) {
                 res.status(404).json({ "status code": 404, "error code": "1004", "error message": "Given user does not exist" });
             } else {
@@ -78,7 +76,7 @@ router.route('/users/:user_id')
      */
     .delete(function (req, res) {
         User.remove({
-            _id: req.params.user_id
+            userId: req.params.user_id
         }, function (err, user) {
             if (err) {
                 res.status(400).json({ "status code": 400, "error code": "1006", "error message": "The user cannot be deleted" });
