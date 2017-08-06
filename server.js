@@ -10,8 +10,8 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+app.use(bodyParser.json({limit: '50mb'}));
 
 var port = process.env.PORT || 9000;
 var environment = process.env.NODE_ENV || 'development';
