@@ -18,7 +18,8 @@ var environment = process.env.NODE_ENV || 'development';
 
 var mongoose = require('mongoose');
 if(environment != 'development'){  
-  mongoose.connect('mongodb://bluesky:bluesky@127.0.0.1:27017/bluesky');
+  //mongoose.connect('mongodb://bluesky:bluesky@127.0.0.1:27017/bluesky');
+  mongoose.connect('mongodb://bluesky:bluesky@35.185.219.43:27017/bluesky');
 }else {  
   mongoose.connect('mongodb://bluesky:bluesky@35.185.219.43:27017/bluesky');
 }
@@ -29,6 +30,7 @@ var router = require('./routes/router');
 var users = require('./routes/user');
 var locations = require('./routes/location');
 var userhunts = require('./routes/userhunt');
+var userhuntlocations = require('./routes/userhuntlocation');
 var hunts = require('./routes/hunt');
 
 app.use(function(req, res, next) {
@@ -41,6 +43,7 @@ app.use('/api', router);
 app.use('/api', users);
 app.use('/api', locations)
 app.use('/api', userhunts);
+app.use('/api', userhuntlocations);
 app.use('/api', hunts);
 /** END: Express Routes Definition */
 

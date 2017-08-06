@@ -166,16 +166,55 @@ router.route('/locations/:user_id/:hunt_id')
                 $unwind: '$locations'
             },
             {
+                $project: {
+                    _id : '$locations._id',
+                    name : '$locations.name',
+                    description : '$locations.description',
+                    imageUrl : '$locations.imageUrl',
+                    qrToken : '$locations.qrToken',
+                    clues : '$locations.clues'
+                }
+            },
+            {
                 $lookup: {
                     from: 'userhuntlocations',
-                    localField: 'locations._id',
+                    localField: '_id',
                     foreignField: 'locationId',
                     as: 'activeLocations'
                 }
             },
             {
-                $match: { 
-                    "activeLocations.userId": mongoose.Types.ObjectId(req.params.user_id)
+                $project: {
+                    _id : 1,
+                    name : 1,
+                    description : 1,
+                    imageUrl : 1,
+                    qrToken : 1,
+                    clues : 1,
+                    activeLocations : { 
+                        $filter: {
+                            input: "$activeLocations",
+                            as: "activeLocation",
+                            cond: { $eq: [ "$$activeLocation.userId", mongoose.Types.ObjectId(req.params.user_id) ] }
+                        }
+                    }
+                }
+            },
+            {
+                $unwind: {
+                    path: '$activeLocations',
+                    preserveNullAndEmptyArrays : true
+                }
+            },
+            {
+                $project: {
+                    _id : 1,
+                    name : 1,
+                    description : 1,
+                    imageUrl : 1,
+                    qrToken : 1,
+                    clues : 1,
+                    status: { $ifNull: [ '$activeLocations.status', "not_found" ] }
                 }
             }
         ], function(err, results){
