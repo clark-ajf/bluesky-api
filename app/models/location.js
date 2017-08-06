@@ -2,7 +2,7 @@
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
-var Clue = require('clue');
+var Clue = require('./clue');
 
 var LocationSchema   = new Schema({
     name: {type: String, required: true},

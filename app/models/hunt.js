@@ -2,7 +2,7 @@
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
-var Location = require('location');
+var Location = require('./location');
 
 var HuntSchema   = new Schema({
     name: {type: String, required: true, minlength: [1, 'The string length must be between 1-15'] , maxlength: [15, 'The string length must be between 1-15']},
