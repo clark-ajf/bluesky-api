@@ -31,16 +31,27 @@ router.route('/users')
      * @throws Bad Request (400 Status Code)
      */
     .post(function (req, res) {
-        var user = new User();
-
-        user.userId = req.body.userId;
-        user.email = req.body.email;
-        user.organizer = req.body.organizer;
-        user.save(function (err) {
-            if (err) {
-                res.status(400).json(err);
+        User.findOne({ userId: req.body.userId}, function (error, user) {
+            if (error) {
+                res.status(404).json({ "status code": 404, "error code": "1004", "error message": "Given user does not exist" });
             } else {
-                res.status(201).json(user);
+                if (user) {
+                    res.status(200).json(user)
+                }
+                else {
+                    var user = new User();
+
+                    user.userId = req.body.userId;
+                    user.email = req.body.email;
+                    user.organizer = req.body.organizer;
+                    user.save(function (err) {
+                        if (err) {
+                            res.status(400).json(err);
+                        } else {
+                            res.status(201).json(user);
+                        }
+                    });
+                }
             }
         });
     });
