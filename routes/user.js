@@ -39,16 +39,16 @@ router.route('/users')
                     res.status(200).json(user)
                 }
                 else {
-                    var user = new User();
+                    var newUser = new User();
 
-                    user.userId = req.body.userId;
-                    user.email = req.body.email;
-                    user.organizer = req.body.organizer;
-                    user.save(function (err) {
+                    newUser.userId = req.body.userId;
+                    newUser.email = req.body.email;
+                    newUser.organizer = req.body.organizer;
+                    newUser.save(function (err) {
                         if (err) {
                             res.status(400).json(err);
                         } else {
-                            res.status(201).json(user);
+                            res.status(201).json(newUser);
                         }
                     });
                 }
