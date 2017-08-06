@@ -7,4 +7,4 @@ var ClueSchema   = new Schema({
     message: {type: String, required: true}
 });
 
-module.exports = mongoose.model('Clue', CluesSchema);
+module.exports = mongoose.model('Clue', ClueSchema);
