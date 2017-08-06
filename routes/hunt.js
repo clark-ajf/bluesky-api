@@ -48,6 +48,59 @@ router.route('/hunts')
                 res.status(201).json(hunt);
             }
         });
+    })
+    /**
+     * PATCH call for the hunt entity.
+     * @param {String} name - The name of the new hunt
+     * @param {String} shortDescription - The shortDescription of the new hunt
+     * @param {string} longDescription - The longDescription of the new hunt
+     * @returns {object} A message and the hunt created. (201 Status Code)
+     * @throws Bad Request (400 Status Code)
+     */
+    .patch(function (req, res) {
+
+        Hunt.findById(req.body._id, function(error, hunt){
+            if(error){
+                res.status(400).json({ "status code": 400, "error code": "1002", "error message": "Hunt not found" });
+            }else{                
+                hunt.name = req.body.name;
+                hunt.shortDescription = req.body.shortDescription;
+                hunt.longDescription = req.body.longDescription;
+                hunt.locations = req.body.locations;
+                hunt.isDeleted = req.body.isDeleted;
+                hunt.imageUrl = req.body.imageUrl;
+                hunt.owner = req.body.owner;
+                hunt.save(function (err) {
+                    if (err) {
+                        res.status(400).json(err);
+                    } else {
+                        res.status(201).json(hunt);
+                    }
+                });
+            }
+        });
+    });
+
+router.route('/hunts/delete')
+    /**
+     * POST call for deleting hunt entity.
+     * @throws Bad Request (400 Status Code)
+     */
+    .post(function (req, res) {
+        Hunt.findById(req.body._id, function(error, hunt){
+            if(error){
+                res.status(400).json({ "status code": 400, "error code": "1002", "error message": "Hunt not found" });
+            }else{                
+                hunt.isDeleted = true;
+                hunt.save(function (err) {
+                    if (err) {
+                        res.status(400).json(err);
+                    } else {
+                        res.status(201).json(hunt);
+                    }
+                });
+            } 
+        });  
     });
 
 /** 
@@ -170,7 +223,7 @@ router.route('/hunts/:user_id')
                     shortDescription : "$array.shortDescription",
                     isDeleted: "$array.isDeleted",
                     locations: "$array.locations",
-                    status: { $ifNull: [ '$array.status', "owned" ] }
+                    status: { $ifNull: [ '$array.status', "owned" ] } //change owned for null if needed
                 }
             
             }
