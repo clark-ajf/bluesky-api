@@ -6,6 +6,7 @@
 var express = require('express');
 var router = express.Router();
 var Location = require('../app/models/location');
+var Hunt = require('../app/models/hunt');
 
 router.route('/locations')
     /**
@@ -142,6 +143,50 @@ router.route('/locations/hunt_id/:hunt_id')
                     res.status(404).send(err);
                 }
             }
+        });
+    })
+
+router.route('/locations/:user_id/:hunt_id')
+    /**
+     * GET call for the location entity by user and hunt
+     * @returns {object} the user with Id userId and hunt with Id huntId. (200 Status Code)
+     * @throws Not Found (404 Status Code)
+     */
+    .get(function (req, res) {
+        
+        Hunt.aggregate([
+            {
+                $match: {
+                    _id: mongoose.Types.ObjectId(req.params.hunt_id)
+                }
+            },
+            {
+                $unwind: '$locations'
+            },
+            {
+                $lookup: {
+                    from: 'userhuntlocations',
+                    localField: 'locations._id',
+                    foreignField: 'locationId',
+                    as: 'activeLocations'
+                }
+            },
+            {
+                $match: { 
+                    "activeLocations.userId": mongoose.Types.ObjectId(req.params.user_id)
+                }
+            }
+        ], function(err, results){
+            if (err) {
+                res.status(404).json({ "status code": 404, "error code": "1004", "error message": "Given user location does not exist" });
+            } else {
+                if (results) {
+                    res.status(200).json(results)
+                }
+                else {
+                    res.status(404).send(err);
+                }
+            }            
         });
     })
 
