@@ -4,8 +4,8 @@ var Schema       = mongoose.Schema;
 
 
 var UserHuntSchema   = new Schema({
-    userId: Schema.Types.ObjectId,
-    huntId: Schema.Types.ObjectId,
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    huntId: { type: Schema.Types.ObjectId, ref: 'Hunt' },
     startTime:  { type: Date, default: Date.now },
     endTime: { type: Date, default: Date.now },
     status: String,

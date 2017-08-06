@@ -41,7 +41,7 @@ router.route('/locations')
      */
     .post(function (req, res) {
         var location = new Location();
-        location.location_id = req.body.location_id;
+        /*location.location_id = req.body.location_id;
         location.location_name = req.body.location_name;
         location.location_description = req.body.location_description;   
         location.is_qr_enabled = req.body.is_qr_enabled;
@@ -68,7 +68,7 @@ router.route('/locations')
         }
         if (typeof req.body.serial_number !== 'undefined'){
             location.serial_number = req.body.serial_number;
-        }
+        }*/
 
         location.save(function (err) {
             if (err) {

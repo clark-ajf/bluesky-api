@@ -4,9 +4,9 @@ var Schema       = mongoose.Schema;
 
 
 var UserHuntLocationsSchema   = new Schema({
-    user_id: Schema.Types.ObjectId,
-    hunt_id: Schema.Types.ObjectId,
-    locationID: Schema.Types.ObjectId,
+    userId: Schema.Types.ObjectId,
+    huntId: Schema.Types.ObjectId,
+    locationId: Schema.Types.ObjectId,
     status: String
 
 });
