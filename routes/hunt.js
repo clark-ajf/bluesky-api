@@ -120,7 +120,10 @@ router.route('/hunts/:user_id/:status')
             Hunt.aggregate([
                 {
                     $match: {
-                        owner: mongoose.Types.ObjectId(req.params.user_id)
+                        $and: [
+                            {owner: mongoose.Types.ObjectId(req.params.user_id)},
+                            {isDeleted: false}
+                        ]                        
                     }
                 },
                 {
@@ -168,7 +171,8 @@ router.route('/hunts/:user_id/:status')
                     $match: {
                         $and: [
                             {"activeCompletedHunts.userId": mongoose.Types.ObjectId(req.params.user_id)},
-                            {"activeCompletedHunts.status": req.params.status}
+                            {"activeCompletedHunts.status": req.params.status},
+                            {isDeleted: false}
                         ]                    
                     }
                 },
