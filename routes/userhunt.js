@@ -28,6 +28,31 @@ router.route('/userhunts')
                 res.status(201).json(userhunt);
             }
         });
+    })
+    
+    /**
+     * PATCH call for the userhunt entity.
+     * @param {String} userId - The userId of the new hunt
+     * @param {String} huntId - The huntId of the new hunt
+     * @param {string} status - The status of the new hunt
+     * @returns {object} A message and the hunt created. (201 Status Code)
+     * @throws Bad Request (400 Status Code)
+     */
+    .patch(function (req, res) {
+        UserHunt.findOne({userId: req.body.userId, huntId: req.body.huntId}, function(error, userhunt){
+            if(error){
+                res.status(400).json({ "status code": 400, "error code": "1002", "error message": "UserHunt not found" });
+            }else{                
+                userhunt.status = req.body.status;
+                userhunt.save(function (err) {
+                    if (err) {
+                        res.status(400).json(err);
+                    } else {
+                        res.status(201).json(userhunt);
+                    }
+                });
+            }
+        });
     });
 
 
