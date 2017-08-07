@@ -104,141 +104,100 @@ router.route('/hunts/delete')
     });
 
 /** 
- * Express Route: /hunts/:user_id
+ * Express Route: /hunts/:user_id/:status
  * @param {string} userId - Id Hash of driver Object
  */
-router.route('/hunts/:user_id')
+router.route('/hunts/:user_id/:status')
     /**
      * GET call for the hunt entity by user (single).
      * @returns {object} the user with Id userId and hunt with Id huntId. (200 Status Code)
+     * @returns {object} the status of the hunt - owned, active, complete. (200 Status Code)
      * @throws Not Found (404 Status Code)
      */
     .get(function (req, res) {
-        
-        Hunt.aggregate([
-            {
-                $match: {
-                    owner: mongoose.Types.ObjectId(req.params.user_id)
-                }
-            },
-            {
-                $lookup: {
-                    from: 'userhunts',
-                    localField: 'owner',
-                    foreignField: 'userId',
-                    as: 'activeCompletedHunts'
-                }
-            },
-            {
-                $project: {
-                    _id : 1,
-                    owner : 1,
-                    imageUrl : 1,
-                    longDescription : 1,
-                    shortDescription : 1,
-                    name : 1,
-                    isDeleted: 1,
-                    locations: 1,
-                    activeCompletedHunts : { 
-                        $filter: {
-                            input: "$activeCompletedHunts",
-                            as: "activeCompletedHunt",
-                            cond: { $ne: [ "$$activeCompletedHunt.huntId", "$_id" ] }
-                        }
+
+        if(req.params.status == 'owned'){
+            Hunt.aggregate([
+                {
+                    $match: {
+                        owner: mongoose.Types.ObjectId(req.params.user_id)
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1, 
+                        name: 1,
+                        owner : 1,
+                        imageUrl : 1,
+                        longDescription : 1,
+                        shortDescription : 1,
+                        isDeleted: 1,
+                        locations: 1,
+                        status: { $literal: "owned" }
                     }
                 }
-            },
-            {
-                $unwind: {
-                    path: '$activeCompletedHunts',
-                    preserveNullAndEmptyArrays : true
+            ], function(err, results){
+                if (err) {
+                    res.status(404).json(err);
+                } else {
+                    if (results) {
+                        res.status(200).json(results)
+                    }
+                    else {
+                        res.status(404).send(err);
+                    }
+                }            
+            });
+        }else{
+            Hunt.aggregate([
+                {
+                    $lookup: {
+                        from: 'userhunts',
+                        localField: '_id',
+                        foreignField: 'huntId',
+                        as: 'activeCompletedHunts'
+                    }
+                },
+                {
+                    $unwind: {
+                        path: '$activeCompletedHunts',
+                        preserveNullAndEmptyArrays : true
+                    }
+                },
+                {
+                    $match: {
+                        $and: [
+                            {"activeCompletedHunts.userId": mongoose.Types.ObjectId(req.params.user_id)},
+                            {"activeCompletedHunts.status": req.params.status}
+                        ]                    
+                    }
+                },
+                { 
+                    $project: {
+                        _id: 1, 
+                        name: 1,
+                        owner : 1,
+                        imageUrl : 1,
+                        longDescription : 1,
+                        shortDescription : 1,
+                        isDeleted: 1,
+                        locations: 1,
+                        status: "$activeCompletedHunts.status"
+                    }            
                 }
-            },
-            {
-                $project: {
-                    _id : 1,
-                    owner : 1,
-                    imageUrl : 1,
-                    longDescription : 1,
-                    shortDescription : 1,
-                    name : 1,
-                    isDeleted: 1,
-                    locations: 1,
-                    activeCompletedHunts : 1
-                }
-            },
-            {
-                $lookup: {
-                    from: 'hunts',
-                    localField: 'activeCompletedHunts.huntId',
-                    foreignField: '_id',
-                    as: 'activeCompletedHuntsDetails'
-                }
-            },
-            {
-                $unwind: {
-                    path: '$activeCompletedHuntsDetails',
-                    preserveNullAndEmptyArrays : true
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    "ownedHunts._id": "$_id",
-                    "ownedHunts.owner": "$owner",
-                    "ownedHunts.imageUrl": "$imageUrl",
-                    "ownedHunts.longDescription": "$longDescription",
-                    "ownedHunts.shortDescription": "$shortDescription",
-                    "ownedHunts.name": "$name",
-                    "ownedHunts.isDeleted": "$isDeleted",
-                    "ownedHunts.locations": "$locations",
-                    "activeCompletedHuntsObj._id": "$activeCompletedHuntsDetails._id",
-                    "activeCompletedHuntsObj.owner": "$activeCompletedHuntsDetails.owner",
-                    "activeCompletedHuntsObj.imageUrl": "$activeCompletedHuntsDetails.imageUrl",
-                    "activeCompletedHuntsObj.longDescription": "$activeCompletedHuntsDetails.longDescription",
-                    "activeCompletedHuntsObj.shortDescription": "$activeCompletedHuntsDetails.shortDescription",
-                    "activeCompletedHuntsObj.name": "$activeCompletedHuntsDetails.name",
-                    "activeCompletedHuntsObj.isDeleted": "$activeCompletedHuntsDetails.isDeleted",
-                    "activeCompletedHuntsObj.locations": "$activeCompletedHuntsDetails.locations",
-                    "activeCompletedHuntsObj.status": "$activeCompletedHunts.status"
-                }
-            },
-            { 
-                $group: {
-                "_id":0,"list1":{$addToSet:"$ownedHunts"},"list2":{$addToSet:"$activeCompletedHuntsObj"}
-                }
-            },
-            { $project: {array:{$setUnion:["$list1","$list2"]}}},
-            { $unwind: {
-                    path: '$array',
-                    preserveNullAndEmptyArrays : true
-                }
-            },
-                { $project: {
-                    _id: "$array._id", 
-                    name: "$array.name",
-                    owner : "$array.owner",
-                    imageUrl : "$array.imageUrl",
-                    longDescription : "$array.longDescription",
-                    shortDescription : "$array.shortDescription",
-                    isDeleted: "$array.isDeleted",
-                    locations: "$array.locations",
-                    status: { $ifNull: [ '$array.status', "owned" ] } //change owned for null if needed
-                }
-            
-            }
-        ], function(err, results){
-            if (err) {
-                res.status(404).json(err);
-            } else {
-                if (results) {
-                    res.status(200).json(results)
-                }
-                else {
-                    res.status(404).send(err);
-                }
-            }            
-        });
+            ], function(err, results){
+                if (err) {
+                    res.status(404).json(err);
+                } else {
+                    if (results) {
+                        res.status(200).json(results)
+                    }
+                    else {
+                        res.status(404).send(err);
+                    }
+                }            
+            });
+        }
     })
 
 module.exports = router;
