@@ -62,7 +62,7 @@ router.route('/hunts')
         Hunt.findById(req.body._id, function(error, hunt){
             if(error){
                 res.status(400).json({ "status code": 400, "error code": "1002", "error message": "Hunt not found" });
-            }else{                
+            }else{
                 hunt.name = req.body.name;
                 hunt.shortDescription = req.body.shortDescription;
                 hunt.longDescription = req.body.longDescription;
@@ -90,7 +90,7 @@ router.route('/hunts/delete')
         Hunt.findById(req.body._id, function(error, hunt){
             if(error){
                 res.status(400).json({ "status code": 400, "error code": "1002", "error message": "Hunt not found" });
-            }else{                
+            }else{
                 hunt.isDeleted = true;
                 hunt.save(function (err) {
                     if (err) {
@@ -99,11 +99,11 @@ router.route('/hunts/delete')
                         res.status(201).json(hunt);
                     }
                 });
-            } 
-        });  
+            }
+        });
     });
 
-/** 
+/**
  * Express Route: /hunts/:user_id/:status
  * @param {string} userId - Id Hash of driver Object
  */
@@ -123,12 +123,12 @@ router.route('/hunts/:user_id/:status')
                         $and: [
                             {owner: mongoose.Types.ObjectId(req.params.user_id)},
                             {isDeleted: false}
-                        ]                        
+                        ]
                     }
                 },
                 {
                     $project: {
-                        _id: 1, 
+                        _id: 1,
                         name: 1,
                         owner : 1,
                         imageUrl : 1,
@@ -149,7 +149,7 @@ router.route('/hunts/:user_id/:status')
                     else {
                         res.status(404).send(err);
                     }
-                }            
+                }
             });
         }else{
             Hunt.aggregate([
@@ -173,12 +173,12 @@ router.route('/hunts/:user_id/:status')
                             {"activeCompletedHunts.userId": mongoose.Types.ObjectId(req.params.user_id)},
                             {"activeCompletedHunts.status": req.params.status},
                             {isDeleted: false}
-                        ]                    
+                        ]
                     }
                 },
-                { 
+                {
                     $project: {
-                        _id: 1, 
+                        _id: 1,
                         name: 1,
                         owner : 1,
                         imageUrl : 1,
@@ -187,7 +187,7 @@ router.route('/hunts/:user_id/:status')
                         isDeleted: 1,
                         locations: 1,
                         status: "$activeCompletedHunts.status"
-                    }            
+                    }
                 }
             ], function(err, results){
                 if (err) {
@@ -199,9 +199,37 @@ router.route('/hunts/:user_id/:status')
                     else {
                         res.status(404).send(err);
                     }
-                }            
+                }
             });
         }
     })
+
+
+/**
+ * Express Route: /hunts/:hunt_id
+ * @param {string} hunt_id - Id Hash of driver Object
+ *
+ * FOR DEVELOPMENT PURPOSES ONLY.  REMOVE BEFORE PRODUCTION FOR SECURITY
+*/
+
+router.route('/hunts/:_id')
+/**
+ * DELETE call for the hunt entity (single).
+ * @returns {object} A string message. (200 Status Code)
+ * @throws Mongoose Database Error (500 Status Code)
+ */
+.delete(function (req, res) {
+    Hunt.remove({
+        _id: req.params._id
+    }, function (err, user) {
+        if (err) {
+            res.status(400).json({ "status code": 400, "error code": "1006", "error message": "The user cannot be deleted" });
+        } else {
+            res.status(200).json({ "message": "User Deleted" });
+        }
+    });
+});
+
+
 
 module.exports = router;
