@@ -5,9 +5,9 @@ var Schema       = mongoose.Schema;
 var Location = require('./location');
 
 var HuntSchema   = new Schema({
-    name: {type: String, required: true, minlength: [1, 'The string length must be between 1-15'] , maxlength: [15, 'The string length must be between 1-15']},
-    shortDescription: {type: String, required: true, minlength: [1, 'The string length must be between 1-50'] , maxlength: [50, 'The string length must be between 1-50']},
-    longDescription: {type: String, required: true, minlength: [1, 'The string length must be between 1-200'] , maxlength: [200, 'The string length must be between 1-200']},
+    name: {type: String, required: true, minlength: [1, 'The string length must be between 1-30'] , maxlength: [30, 'The string length must be between 1-30']},
+    shortDescription: {type: String, required: true, minlength: [1, 'The string length must be between 1-100'] , maxlength: [100, 'The string length must be between 1-100']},
+    longDescription: {type: String, required: true, minlength: [1, 'The string length must be between 1-400'] , maxlength: [400, 'The string length must be between 1-400']},
     locations: [Location.schema],
     isDeleted: {type: Boolean, default: false},
     imageUrl: {type:String},
