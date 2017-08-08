@@ -223,9 +223,9 @@ router.route('/hunts/:_id')
         _id: req.params._id
     }, function (err, user) {
         if (err) {
-            res.status(400).json({ "status code": 400, "error code": "1006", "error message": "The user cannot be deleted" });
+            res.status(400).json({ "status code": 400, "error code": "1006", "error message": "The hunt cannot be deleted" });
         } else {
-            res.status(200).json({ "message": "User Deleted" });
+            res.status(200).json({ "message": "Hunt Deleted" });
         }
     });
 });
