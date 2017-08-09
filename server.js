@@ -19,9 +19,9 @@ var environment = process.env.NODE_ENV || 'development';
 var mongoose = require('mongoose');
 if(environment != 'development'){  
   //mongoose.connect('mongodb://bluesky:bluesky@127.0.0.1:27017/bluesky');
-  mongoose.connect('mongodb://bluesky:bluesky@35.185.219.43:27017/bluesky');
+  mongoose.connect('mongodb://bluesky:bluesky@35.197.126.9:27017/bluesky');
 }else {  
-  mongoose.connect('mongodb://bluesky:bluesky@35.185.219.43:27017/bluesky');
+  mongoose.connect('mongodb://bluesky:bluesky@35.197.126.9:27017/bluesky');
 }
 /** END: Express Server Configuration */
 
