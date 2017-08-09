@@ -5,11 +5,11 @@ var Schema       = mongoose.Schema;
 var Clue = require('./clue');
 
 var LocationSchema   = new Schema({
-    name: {type: String, required: true},
-    description: {type: String, required: true},
-    qrToken: {type: String, required: true},
+    name: String,
+    description: String,
+    qrToken: String,
     clues: [Clue.schema],
-    imageUrl: {type: String}
+    imageUrl: String
 });
 
 module.exports = mongoose.model('Location', LocationSchema);
