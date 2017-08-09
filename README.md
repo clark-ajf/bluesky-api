@@ -1,28 +1,36 @@
-# README #
+# Code API BlueSky #
 
+**Pre-requisites:**
+* Node (version 8 or greater)
+* NPM (version 5 or greater)
+* MongoDB (version 3.2 or greater)
+* (optional) PM2 - Service Management
+
+**Setting up your local environment:**
 To Setup the Environment for the first time:
-```
-#!javascript
 
+```bash
 npm install
 ```
-To Setup the Intellisense in VisualStudio Code:
-```
-#!javascript
 
+To Setup the Intellisense in VisualStudio Code:
+
+```bash
 typings install
 ```
-To Run Tests:
-```
-#!javascript
 
+To run the server:
+```bash
+node server.js
+```
+*(This will run the API in development mode. It doesn't provide livereload so any change to the API has to be reloaded manually)*
+
+For Production environment is recommended to use [PM2](http://pm2.keymetrics.io/docs/usage/quick-start/) and run:
+```bash
+pm2 start process.yml
+```
+
+To Run Tests:
+```bash
 ./node_modules/.bin/mocha -u exports tests
 ```
-
-```
-### What is this repository for? ###
-
-* Quick summary: Code API BlueSky
-* Version
-0.0.1
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)

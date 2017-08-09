@@ -2,14 +2,14 @@
   "name": "bluesky-api",
   "main": "server.js",
   "dependencies": {
-    "express": "~4.15.3",
-    "body-parser": "~1.17.2",
-    "cors": "~2.8.4",
-    "request": "~2.81.0",
-    "mongoose": "~4.11.5",
-    "mocha": "~3.5.0"
+    "body-parser": "1.17.2",
+    "cors": "2.8.4",
+    "express": "4.15.4",
+    "mocha": "3.5.0",
+    "mongoose": "4.11.6",
+    "request": "2.81.0"
   },
   "devDependencies": {
-    "supertest": "~3.0.0"
+    "supertest": "3.0.0"
   }
 }
