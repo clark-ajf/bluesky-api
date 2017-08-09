@@ -34,3 +34,7 @@ To Run Tests:
 ```bash
 ./node_modules/.bin/mocha -u exports tests
 ```
+
+**Configurations:**
+
+To change the server IP address, ports and the transaction maximum size limit edit the **server.js** file.
