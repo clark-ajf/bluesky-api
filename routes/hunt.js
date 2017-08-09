@@ -29,7 +29,11 @@ router.route('/hunts')
      * @param {String} name - The name of the new hunt
      * @param {String} shortDescription - The shortDescription of the new hunt
      * @param {string} longDescription - The longDescription of the new hunt
-     * @returns {object} A message and the hunt created. (201 Status Code)
+     * @param {array} locations - An array with Locations included in the new hunt
+     * @param {boolean} isDeleted - Status of the new hunt (default false)
+     * @param {string} imageUrl - The byte64 string representation of the image for the new hunt
+     * @param {string} owner - ObjectID of the user who owns the new hunt
+     * @returns {object} The hunt object saved into the DB. (201 Status Code)
      * @throws Bad Request (400 Status Code)
      */
     .post(function (req, res) {
@@ -51,10 +55,14 @@ router.route('/hunts')
     })
     /**
      * PATCH call for the hunt entity.
-     * @param {String} name - The name of the new hunt
-     * @param {String} shortDescription - The shortDescription of the new hunt
-     * @param {string} longDescription - The longDescription of the new hunt
-     * @returns {object} A message and the hunt created. (201 Status Code)
+     * @param {String} name - The name of the hunt
+     * @param {String} shortDescription - The shortDescription of the hunt
+     * @param {string} longDescription - The longDescription of the hunt
+     * @param {array} locations - An array with Locations included in the hunt
+     * @param {boolean} isDeleted - Status of the hunt
+     * @param {string} imageUrl - The byte64 string representation of the image for the hunt
+     * @param {string} owner - ObjectID of the user who owns the hunt
+     * @returns {object} The hunt object updated from the DB. (201 Status Code)
      * @throws Bad Request (400 Status Code)
      */
     .patch(function (req, res) {
